@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "tokenizer.hpp"
 
@@ -22,7 +23,13 @@ int main (int argc, char *argv[]) {
     contents = content_stream.str();
   }
 
-  
+  Tokenizer tokenizer(contents);
+  std::vector<Token> tokens = tokenizer.tokenize();
+
+  {
+    std::fstream file("out.asm", std::ios::out);
+    // file << generator.gen_prog();
+  }
 
   std::cout << contents << std::endl;
   return EXIT_SUCCESS;
