@@ -2,11 +2,13 @@
 #include <fstream>
 #include <ios>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
-#include "tokenizer.hpp"
+#include "generation.hpp"
 
 int main (int argc, char *argv[]) {
   if (argc < 2) {
@@ -26,11 +28,25 @@ int main (int argc, char *argv[]) {
   Tokenizer tokenizer(contents);
   std::vector<Token> tokens = tokenizer.tokenize();
 
+  Parser parser(std::move(tokens));
+
+  std::optional<ExitNode> tree = parser.Parse();
+
+  if (!tree.has_value()) {
+    std::cerr << "No statement found\n";
+    exit(EXIT_FAILURE);
+  }
+  else {
+    std::cout << "Found statement: " << tree->expr.int_lit.value.value();
+  }
+  Generation generation(tree.value());
   {
     std::fstream file("out.asm", std::ios::out);
-    // file << generator.gen_prog();
+    file << generation.generate();
   }
 
-  std::cout << contents << std::endl;
+  std::cout << "\n";
+  system("nasm -felf64 out.asm");
+  system("ld -o out out.o");
   return EXIT_SUCCESS;
 }
