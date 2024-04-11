@@ -1,3 +1,3 @@
-./build
-./test.tl
-./test.out
+/build/
+test.tl
+test.out
