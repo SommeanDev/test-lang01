@@ -13,7 +13,7 @@
 int main (int argc, char *argv[]) {
   if (argc < 2) {
     std::cerr << "Incorrect usage. Use instead: " << std::endl;
-    std::cerr << "tlan <file.tl>\n";
+    std::cerr << "tlan <file.tal>\n";
     return EXIT_FAILURE;
   }
   
