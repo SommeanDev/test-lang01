@@ -47,6 +47,6 @@ int main (int argc, char *argv[]) {
 
   std::cout << "\n";
   system("nasm -felf64 out.asm");
-  system("ld -o out out.o");
+  system("ld -o ../test.out out.o");
   return EXIT_SUCCESS;
 }
