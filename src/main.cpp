@@ -30,23 +30,41 @@ int main (int argc, char *argv[]) {
 
   Parser parser(std::move(tokens));
 
-  std::optional<ExitNode> tree = parser.Parse();
+  std::vector<std::optional<Node>> tree = parser.Parse();
 
-  if (!tree.has_value()) {
+  if (tree.size() == 0) {
     std::cerr << "No statement found\n";
     exit(EXIT_FAILURE);
   }
   else {
-    std::cout << "Found statement: " << tree->expr.int_lit.value.value();
+    std::cout << "Tree nodes: " << tree.size() << std::endl;
   }
-  Generation generation(tree.value());
+  
+  Generation generation(tree);
   {
-    std::fstream file("out.asm", std::ios::out);
+    std::fstream file("out.c", std::ios::out);
     file << generation.generate();
   }
 
+ std::string filename = argv[1];
+
+  // Find the position of the last '.' character
+  size_t dot_position = filename.find_last_of('.');
+  if (dot_position == std::string::npos) {
+      std::cerr << "No extension found in the filename.\n";
+      return 1;
+  }
+
+  // Extract the filename without the extension
+  std::string basename = filename.substr(0, dot_position);
+
+  // Construct the command
+  std::stringstream command_stream;
+  command_stream << "gcc out.c -o " << basename << ".exe";
+  std::string command = command_stream.str();
+
   std::cout << "\n";
-  system("nasm -felf64 out.asm");
-  system("ld -o ../test.out out.o");
+
+  system(command.c_str());
   return EXIT_SUCCESS;
 }
