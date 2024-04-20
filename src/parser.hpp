@@ -11,7 +11,8 @@
 enum class NodeType
 {
   ExitNode,
-  IncludeNode
+  IncludeNode, 
+  UsrFuncNode
 };
 
 struct ExprNode
